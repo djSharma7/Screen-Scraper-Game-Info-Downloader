@@ -1,0 +1,296 @@
+[
+  {
+    "action_name": "GET_URL",
+    "xpaths": [
+      "https://screenscraper.fr/gameinfos.php?gameid=5426&action=onglet&zone=gameinfosinfos"
+    ],
+    "wait_time": 5,
+    "keys": null,
+    "action_text": "Get game url",
+    "no_falsy_value": true
+  },
+      {
+    "action_name": "FIND_ELEMENT_AND_EXTRACT_TEXT",
+    "xpaths": [
+      "//meta[@property='og:url']"
+    ],
+    "filter": [
+      {
+        "name": "trim"
+      },
+      {
+        "name":"split",
+        "options": {
+          "split_by": "gameid=",
+          "index": -1
+        }
+      }
+    ],
+    "wait_time": 0,
+    "keys": "content",
+    "action_text": "Get Game Site Id",
+    "source": "Game_Site_Id"
+  },
+  {
+    "action_name": "FIND_ELEMENT_AND_EXTRACT_TEXT",
+    "xpaths": [
+      "//div[@class='cssbigtitle']//font"
+    ],
+    "filter": [
+      {
+        "name": "trim"
+      },
+      {
+        "name": "replace",
+        "options": {
+          "replace_by": "-",
+          "replace_with": ""
+        }
+      }
+    ],
+    "wait_time": 0,
+    "keys": null,
+    "action_text": "Get Platform",
+    "source": "Platform"
+  },
+  {
+    "action_name": "FIND_ELEMENT_AND_EXTRACT_TEXT",
+    "xpaths": [
+      "//div[@class='cssnavigationcolonne']"
+    ],
+    "filter": [
+      {
+        "name": "trim"
+      },
+      {
+        "name": "replace",
+        "options": {
+          "replace_by": "-",
+          "replace_with": ""
+        }
+      }
+    ],
+    "wait_time": 0,
+    "keys": null,
+    "action_text": "Get Game Name",
+    "source": "Game_Name"
+  },
+
+  {
+    "action_name": "FIND_ELEMENT_AND_EXTRACT_TEXT",
+    "xpaths": [
+      "//td[a[@name='mediazoneplayers']]//td[@class='cssadmintabletdwhite' and @style]"
+    ],
+    "wait_time": 0,
+    "keys": null,
+    "source": "Number_Of_Players",
+    "filter": [
+      {
+        "name": "trim"
+      }
+    ],
+    "action_text": "Get Number Of Players"
+  },
+  {
+    "action_name": "FIND_ELEMENT_AND_EXTRACT_TEXT",
+    "xpaths": [
+      "//td[a[@name='mediazonedatessortie']]//tr[td[img[contains(@src,'/us')]]]",
+      "//td[a[@name='mediazonedatessortie']]//tr[td[img[contains(@src,'/eu')]]]",
+      "//td[a[@name='mediazonedatessortie']]//tr[td[img[contains(@src,'/jp')]]]"
+    ],
+    "wait_time": 0,
+    "keys": null,
+    "source": "Release_Date",
+    "filter": [
+      {
+        "name": "trim"
+      },
+      {
+        "name": "split",
+        "options": {
+        "split_by": "\n",
+        "index": 0
+      }}
+    ],
+    "action_text": "Get Release Date"
+  },
+ {
+    "action_name": "FIND_ELEMENT_AND_EXTRACT_TEXT",
+    "wait_for_xpath": false,
+    "xpaths": [
+      "//td[a[@name='mediazonedescription']]//tr[td[img[contains(@src,'/us')]]]//td[@class='cssadmintabletdwhite' and contains(@style,'text') and not(img)]",
+      "//td[a[@name='mediazonedescription']]//tr[td[img[contains(@src,'/eu')]]]//td[@class='cssadmintabletdwhite' and contains(@style,'text') and not(img)]",
+      "//td[a[@name='mediazonedescription']]//tr[td[img[contains(@src,'/au')]]]//td[@class='cssadmintabletdwhite' and contains(@style,'text') and not(img)]",
+      "//td[a[@name='mediazonedescription']]//tr[td[img[contains(@src,'/fr')]]]//td[@class='cssadmintabletdwhite' and contains(@style,'text') and not(img)]",
+      "//td[a[@name='mediazonedescription']]//tr[td[img[contains(@src,'/wor')]]]//td[@class='cssadmintabletdwhite' and contains(@style,'text') and not(img)]",
+      "//td[a[@name='mediazonedescription']]//tr[td[img[contains(@src,'/jp')]]]//td[@class='cssadmintabletdwhite' and contains(@style,'text') and not(img)]"
+    ],
+    "filter": [
+      {
+        "name": "trim"
+      }
+    ],
+    "wait_time": 0,
+    "keys": null,
+    "source": "Synopsis",
+    "action_text": "Get Synopsis"
+  },
+  {
+    "action_name": "FIND_ELEMENT_AND_CLICK",
+    "xpaths": [
+      "//div[@class='ongletzoneinfos' and contains(text(),'Medias')][1]"
+    ],
+    "wait_time": 2,
+    "keys": null,
+    "action_text": "Click On Medias"
+  },
+  {
+    "action_name": "FIND_ELEMENTS_AND_EXTRACT_ARRAY",
+    "xpaths": [
+      "//img[contains(@id,'sstitle')]"
+    ],
+    "wait_time": 0,
+    "keys": "src",
+
+    "source": "Screenshot_Title",
+    "action_text": "Get Screenshots Title"
+  },
+  {
+    "action_name": "FIND_ELEMENTS_AND_EXTRACT_ARRAY",
+    "xpaths": [
+      "//img[contains(@id,'ss') and not(contains(@id,'sstitle'))]"
+    ],
+    "wait_time": 0,
+    "keys": "src",
+
+    "source": "Screenshots",
+    "action_text": "Get Screenshots"
+  },
+  {
+    "action_name": "FIND_ELEMENTS_AND_EXTRACT_ARRAY",
+    "xpaths": [
+      "//video[@id='example_video_1_html5_api']//source"
+    ],
+    "wait_time": 0,
+    "keys": "src",
+
+    "source": "Video",
+    "action_text": "Get Video"
+  },
+  {
+    "action_name": "FIND_ELEMENT_AND_EXTRACT_TEXT",
+    "xpaths": [
+      "//img[contains(@id,'box-2D-us')]",
+      "//img[contains(@id,'box-2D-eu')]",
+      "//img[contains(@id,'box-2D-au')]",
+      "//img[contains(@id,'box-2D-fr')]",
+      "//img[contains(@id,'box-2D-wor')]",
+      "//img[contains(@id,'box-2D-jp')]",
+      "//img[contains(@id,'box-2D-us')]",
+      "//img[contains(@id,'box-2D-de')]",
+      "//img[contains(@id,'box-2D') and not(contains(@id,'side')) and not(contains(@id,'back'))][1]"
+    ],
+    "wait_time": 0,
+    "keys": "src",
+
+    "source": "Case_Front",
+    "action_text": "Get Case Front"
+  },
+  {
+    "action_name": "FIND_ELEMENT_AND_EXTRACT_TEXT",
+    "xpaths": [
+      "//img[contains(@id,'box-2D-back-us')]",
+      "//img[contains(@id,'box-2D-back-eu')]",
+      "//img[contains(@id,'box-2D-back-au')]",
+      "//img[contains(@id,'box-2D-back-fr')]",
+      "//img[contains(@id,'box-2D-back-wor')]",
+      "//img[contains(@id,'box-2D-back-jp')]",
+      "//img[contains(@id,'box-2D-back-us')]",
+      "//img[contains(@id,'box-2D-back-de')]",
+      "//img[contains(@id,'box-2D-back') and not(contains(@id,'side'))][1]"
+    ],
+    "wait_time": 0,
+    "keys": "src",
+
+    "source": "Case_Back",
+    "action_text": "Get Case Back"
+  },
+  {
+    "action_name": "FIND_ELEMENT_AND_EXTRACT_TEXT",
+    "xpaths": [
+      "//img[contains(@id,'box-3D-us')]",
+      "//img[contains(@id,'box-3D-eu')]",
+      "//img[contains(@id,'box-3D-au')]",
+      "//img[contains(@id,'box-3D-fr')]",
+      "//img[contains(@id,'box-3D-wor')]",
+      "//img[contains(@id,'box-3D-jp')]",
+      "//img[contains(@id,'box-3D-us')]",
+      "//img[contains(@id,'box-3D-de')]",
+      "//img[contains(@id,'box-3D')][1]"
+    ],
+    "wait_time": 0,
+    "keys": "src",
+
+    "source": "3D_Box",
+    "action_text": "Get 3D Box"
+  },
+  {
+    "action_name": "FIND_ELEMENT_AND_EXTRACT_TEXT",
+    "xpaths": [
+      "//img[@id='support-2D-us']",
+      "//img[@id='support-3D-eu']",
+      "//img[@id='support-3D-au']",
+      "//img[@id='support-3D-fr']",
+      "//img[@id='support-3D-wor']",
+      "//img[@id='support-3D-jp']",
+      "//img[contains(@id,'support-3D')][1]",
+      "//img[@id='support-2D-us']",
+      "//img[@id='support-2D-eu']",
+      "//img[@id='support-2D-au']",
+      "//img[@id='support-2D-fr']",
+      "//img[@id='support-2D-wor']",
+      "//img[@id='support-2D-jp']",
+      "//img[contains(@id,'support-2D')][1]"
+    ],
+    "wait_time": 0,
+    "keys": "src",
+
+    "source": "3D_Support",
+    "action_text": "Get 3D Support"
+  },
+  {
+    "action_name": "FIND_ELEMENT_AND_EXTRACT_TEXT",
+    "xpaths": [
+      "//img[@id='wheel-us']",
+      "//img[@id='wheel-eu']",
+      "//img[@id='wheel-au']",
+      "//img[@id='wheel-fr']",
+      "//img[@id='wheel-wor']",
+      "//img[@id='wheel-jp']",
+      "//img[contains(@id,'wheel') and not(contains(@id,'carbon')) and not(contains(@id,'steel'))][1]"
+    ],
+    "wait_time": 0,
+    "keys": "src",
+
+    "source": "Wheel",
+    "action_text": "Get Wheel"
+  },
+  {
+    "action_name": "FIND_ELEMENT_AND_EXTRACT_TEXT",
+    "xpaths": [
+      "//img[@id='mixrbv2-us']",
+      "//img[@id='mixrbv2-eu']",
+      "//img[@id='mixrbv2-au']",
+      "//img[@id='mixrbv2-fr']",
+      "//img[@id='mixrbv2-wor']",
+      "//img[@id='mixrbv2-jp']",
+      "//img[contains(@id,'mixrbv2')][1]",
+      "//img[contains(@id,'mixrbv1')][1]"
+    ],
+    "wait_time": 0,
+    "keys": "src",
+
+    "source": "Mix_Recall_Box",
+    "action_text": "Get Mix Recall Box"
+  }
+]

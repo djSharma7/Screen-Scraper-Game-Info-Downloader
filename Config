@@ -1,0 +1,10 @@
+[CONFIG_SECTION]
+GECKO_DRIVER_PATH = geckodriver.exe
+HEADLESS_BROWSER = True
+FILE_NAME_SEPARATOR = ___-___
+REMOVE_SECONDS_VIDEO = 0
+DATABASE_FILE_PATH = Database_File.txt
+SKIP_DATABASE_FILE = False
+FOLDER_TO_SAVE = Media_Download_Folder
+POST_PROCESSING_OVERLAY_ENABLE = False
+CONSOLE_URL = https://screenscraper.fr/gamesinfos.php?plateforme=13&gameid=0&groupid=0&companyid=0&alpha=D&numpage=1
