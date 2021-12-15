@@ -166,17 +166,7 @@
     "source": "Screenshots",
     "action_text": "Get Screenshots"
   },
-  {
-    "action_name": "FIND_ELEMENTS_AND_EXTRACT_ARRAY",
-    "xpaths": [
-      "//video[@id='example_video_1_html5_api']//source"
-    ],
-    "wait_time": 0,
-    "keys": "src",
-
-    "source": "Video",
-    "action_text": "Get Video"
-  },
+ 
   {
     "action_name": "FIND_ELEMENT_AND_EXTRACT_TEXT",
     "xpaths": [
@@ -292,5 +282,16 @@
 
     "source": "Mix_Recall_Box",
     "action_text": "Get Mix Recall Box"
+  },
+   {
+    "action_name": "FIND_ELEMENTS_AND_EXTRACT_ARRAY",
+    "xpaths": [
+      "//video[@id='example_video_1_html5_api']//source"
+    ],
+    "wait_time": 0,
+    "keys": "src",
+
+    "source": "Video",
+    "action_text": "Get Video"
   }
 ]
