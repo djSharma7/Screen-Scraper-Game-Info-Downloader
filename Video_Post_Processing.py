@@ -2,6 +2,7 @@ from mutagen.mp4 import MP4
 import subprocess
 from moviepy.video.io.ffmpeg_tools import ffmpeg_extract_subclip
 import os
+import moviepy.editor as mp
 import cv2
 
 class VideoProcessing():
@@ -77,7 +78,26 @@ class VideoProcessing():
 		except Exception as ee:
 			return False,-1
 
-
+	def insert_overlay_moviepy(self, file_name, overlay_file_name):
+		try:
+			img = cv2.imread(overlay_file_name)
+			img_height, img_width, _ = img.shape
+			video = mp.VideoFileClip(file_name)
+			w = video.w
+			h = video.h
+			hh = h - 120
+			edited_file_name = file_name.split('.mp4')[0]
+			edited_file_name = '{}_.mp4'.format(edited_file_name)
+			logo = (mp.ImageClip(overlay_file_name)
+					.set_duration(video.duration)
+					.resize(height=100)
+					.margin(left=20, top=hh, opacity=0)
+					.set_pos('left', 'bottom'))
+			final = mp.CompositeVideoClip([video, logo])
+			final.subclip(0).write_videofile(edited_file_name)
+			return True, edited_file_name
+		except Exception as ee:
+			return False, -1
 
 	def get_length(self,file_name):
 		try:
@@ -96,7 +116,7 @@ class VideoProcessing():
 		if self.overlay_enabled:
 			if overlay_file_name:
 				if os.path.exists(overlay_file_name):
-					status, val = self.insert_overlay(file_name, overlay_file_name)
+					status, val = self.insert_overlay_moviepy(file_name, overlay_file_name)
 					if status:
 						os.remove(file_name)
 						file_name = val
@@ -121,5 +141,3 @@ class VideoProcessing():
 		if meta_title:
 			self.insert_meta_title_into_video(file_name, meta_title)
 		return
-
-
