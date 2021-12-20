@@ -7,5 +7,5 @@ DATABASE_FILE_PATH = Database_File.txt
 SKIP_DATABASE_FILE = False
 FOLDER_TO_SAVE = Media_Download_Folder
 POST_PROCESSING_OVERLAY_ENABLE = True
-OVERLAY_FILE_ORDER = Wheel,3D_Box,3D_Support
+OVERLAY_FILE_ORDER = 3D_Support,Wheel,3D_Box
 CONSOLE_URL = https://screenscraper.fr/gamesinfos.php?plateforme=13&gameid=0&groupid=0&companyid=0&alpha=D&numpage=1
