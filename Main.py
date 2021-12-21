@@ -9,7 +9,6 @@ import time
 import re
 import Video_Post_Processing
 
-
 def get_mozilla_with_extension_enabled():
     '''
     This method enables the gecko driver with required preferences.
@@ -52,6 +51,13 @@ def main(driver,ACTIONS_LIST):
 
     ae_obj = Actions.ActionExecutables(driver,logger)
     vp_obj = Video_Post_Processing.VideoProcessing(CONFIG_OBJ)
+
+    try:
+        overlay_file_order = CONFIG_OBJ.get('overlay_file_order','')
+        overlay_file_order = overlay_file_order.split(',')
+    except Exception as ee:
+        overlay_file_order = ['3D_Support','3D_Box','Wheel']
+
     db_obj = None
     if not CONFIG_OBJ.get('skip_database_file', False):
         db_obj = Game_Database.Game_Database(CONFIG_OBJ.get('database_file_path'),logger)
@@ -143,22 +149,35 @@ def main(driver,ACTIONS_LIST):
         game_site_id = RESULT_OBJ.get('Game_Site_Id','default_id')
         folder_name = CONFIG_OBJ['folder_to_save']
 
-        overlay_image_path = None
+
+        overlay_file_obj = {
+            '3D_Box': None,'3D_Support':None,'Wheel':None
+        }
         for key in RESULT_OBJ:
             if key in ['Platform','Game_Name','Number_Of_Players','Release_Date','Synopsis','Game_Site_Id']:
                 FINAL_RESULT_OBJ[key] = RESULT_OBJ.get(key,None)
                 continue
             asset_media_name = key
-            extension = '.jpg'
+            extension = '.png'
             if key in ['Video']:
                 extension = '.mp4'
 
             if type(RESULT_OBJ.get(key,[]))==list:
                 if len(RESULT_OBJ.get(key,[])) >0:
                     counter =1
+
                     for key__ in RESULT_OBJ.get(key,[]):
+                        if not (key__ and type(key__) == str):
+                            continue
                         if key__ and ('http' in key__):
 
+                            if 'maxwidth' in key__:
+                                arr = key__.split('maxwidth')
+                                if len(arr)>1:
+                                    arr = arr[0]
+                                    if arr[-1] == '&':
+                                        arr = arr+'maxwidth=1000&maxheight=800'
+                                        key__ = arr
                             file_name = '{}/{}{}{}{}{}{}{}_{}{}'.format(folder_name,platform_name,
                                                             file_separator,
                                                               game_site_id,
@@ -179,6 +198,19 @@ def main(driver,ACTIONS_LIST):
                                 FINAL_RESULT_OBJ['{}_{}'.format(key,counter)] = file_name
                                 counter +=1
             else:
+                if key in ['3D_Box','3D_Support','Wheel']:
+                    extension = '.png'
+                url__ = RESULT_OBJ.get(key)
+                if url__ and type(url__) == str:
+                    if 'maxwidth' in url__:
+                        arr = url__.split('maxwidth')
+                        if len(arr) > 1:
+                            arr = arr[0]
+                            if arr[-1] == '&':
+                                arr = arr + 'maxwidth=1000&maxheight=800'
+                                url__ =arr
+                else:
+                    continue
                 file_name = '{}/{}{}{}{}{}{}{}{}'.format(folder_name,platform_name,
                                                       file_separator,
                                                       game_site_id,
@@ -187,14 +219,15 @@ def main(driver,ACTIONS_LIST):
                                                       file_separator,
                                                       asset_media_name,
                                                       extension)
-                if key in ['Mix_Recall_Box']:
-                    overlay_image_path = file_name
+
+                if key in ['3D_Box','3D_Support','Wheel']:
+                    overlay_file_obj[key] = file_name
                 if path.exists(file_name):
                     continue
 
                 request_options = {
                     'type': 'GET',
-                    'url': RESULT_OBJ.get(key),
+                    'url': url__,
                     'file_name': file_name,
                     'headers': {}
                 }
@@ -203,6 +236,11 @@ def main(driver,ACTIONS_LIST):
                     FINAL_RESULT_OBJ[key] = file_name
 
             if key in ['Video']:
+                overlay_image_path = None
+                for overlay_file in overlay_file_order:
+                    if overlay_file_obj[overlay_file]:
+                        overlay_image_path = overlay_file_obj[overlay_file]
+                        break
                 if path.exists(file_name):
                     meta_title = 'Title: {}\nPlatform: {}\nPlayers: {}\nRelease Dates: {}\nSynopsis: {}'.format(
                         FINAL_RESULT_OBJ.get('Game_Name','Default'),
@@ -217,7 +255,6 @@ def main(driver,ACTIONS_LIST):
         if db_obj:
             db_obj.write_into_db(game_id)
         logger.info("Done! Game Id {} \n".format(game_id))
-
     driver.quit()
 
 def create_files_folders(CONFIG_OBJ):
