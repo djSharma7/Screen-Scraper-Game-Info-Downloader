@@ -62,6 +62,7 @@ def main(driver,ACTIONS_LIST):
     if not CONFIG_OBJ.get('skip_database_file', False):
         db_obj = Game_Database.Game_Database(CONFIG_OBJ.get('database_file_path'),logger)
 
+
     start_actions = [
                     {
                     "action_name": "GET_URL",
@@ -71,7 +72,7 @@ def main(driver,ACTIONS_LIST):
                     "action_text": "Get INPUT Console Url",
                     "no_falsy_value": True
                   },
-                    {
+                {
                     "action_name": "FIND_ELEMENT_AND_CLICK",
                     "xpaths": ["//td[@class='csspage' and contains(text(),'gameslist .csv')]"],
                     "wait_time": 5,
@@ -82,10 +83,18 @@ def main(driver,ACTIONS_LIST):
     for action_obj in start_actions:
         logger.debug('{}:- {}'.format(action_obj.get('action_name'), action_obj.get('action_text')))
         value = ae_obj.actions(action_obj)
+
         if not value and action_obj.get('no_falsy_value',False):
             logger.error('{}--{}--{}'.format(action_obj.get('action_name'),action_obj.get('action_text'),'VALUE REQUIRED'))
             driver.quit()
             exit()
+    platform_name_main = None
+    try:
+        value = driver.find_element_by_xpath("//div[@class='cssnavigationdropdownmenuzone']").text
+        if value :
+            platform_name_main = value
+    except Exception as ee:
+        platform_name_main = None
 
     wait_try =1
     game_list_downloaded = False
@@ -121,7 +130,6 @@ def main(driver,ACTIONS_LIST):
         ACTIONS_LIST[0]['xpaths'][0] = uu
         for action_obj in ACTIONS_LIST:
             logger.debug('{}:- {}'.format(action_obj.get('action_name'),action_obj.get('action_text')))
-
             value =ae_obj.actions(action_obj)
             if action_obj.get('source') in ['Video']:
                 if type(value) == list:
@@ -140,7 +148,10 @@ def main(driver,ACTIONS_LIST):
 
         FINAL_RESULT_OBJ = {}
         '''Naming Convention'''
-        platform_name = RESULT_OBJ.get('Platform','default')
+        if platform_name_main:
+            platform_name = platform_name_main
+        else:
+            platform_name = RESULT_OBJ.get('Platform','default')
         platform_name = '_'.join(platform_name.split())
         game_site_name = RESULT_OBJ.get('Game_Name','default_name')
         game_site_name = '_'.join(game_site_name.split())
