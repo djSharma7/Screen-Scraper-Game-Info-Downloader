@@ -1,5 +1,4 @@
 from mutagen.mp4 import MP4
-import subprocess
 from moviepy.video.io.ffmpeg_tools import ffmpeg_extract_subclip
 import os
 import moviepy.editor as mp
@@ -101,14 +100,22 @@ class VideoProcessing():
 
 	def get_length(self,file_name):
 		try:
-			result = subprocess.run(["ffprobe", "-v", "error", "-show_entries",
-									 "format=duration", "-of",
-									 "default=noprint_wrappers=1:nokey=1", file_name],
-									stdout=subprocess.PIPE,
-									stderr=subprocess.STDOUT)
+			try:
+				data = cv2.VideoCapture(file_name)
+			except Exception as video_exp:
+				from os import path
+				file_name = path.abs(file_name)
+				data = cv2.VideoCapture(file_name)
 
-			return float(result.stdout)
+			frames = data.get(cv2.CAP_PROP_FRAME_COUNT)
+			fps = int(data.get(cv2.CAP_PROP_FPS))
+
+			# calculate dusration of the video
+			seconds = int(frames / fps)
+			return float(seconds)
+
 		except Exception as ee:
+			print ("Excpetion occurred in here",ee)
 			return -1
 
 	def post_process(self, file_name, meta_title, overlay_file_name):
@@ -124,16 +131,16 @@ class VideoProcessing():
 					print("Overlay file path doesnot exist -", overlay_file_name)
 			else:
 				pass
-
 		if self.trim_seconds > 0:
 			video_length = self.get_length(file_name)
 			try:
 				if video_length > self.trim_seconds:
+
 					target_file = file_name
-					target_file = target_file.replace('Video.MP4', 'Video__.MP4')
-					target_file = target_file.replace('Video_.MP4', 'Video__.MP4')
+					target_file = target_file.replace('Video.mp4', 'Video__.mp4')
+					target_file = target_file.replace('Video_.mp4', 'Video__.mp4')
 					ffmpeg_extract_subclip(file_name,
-										   self.trim_seconds, video_length, targetname=target_file)
+										   int(self.trim_seconds), int(video_length), targetname=target_file)
 					os.remove(file_name)
 					file_name = target_file
 			except Exception as ee:

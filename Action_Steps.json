@@ -119,6 +119,7 @@
     "wait_for_xpath": false,
     "xpaths": [
       "//td[a[@name='mediazonedescription']]//tr[td[img[contains(@src,'/us')]]]//td[@class='cssadmintabletdwhite' and contains(@style,'text') and not(img)]",
+      "//td[a[@name='mediazonedescription']]//tr[td[img[contains(@src,'/en')]]]//td[@class='cssadmintabletdwhite' and contains(@style,'text') and not(img)]",
       "//td[a[@name='mediazonedescription']]//tr[td[img[contains(@src,'/eu')]]]//td[@class='cssadmintabletdwhite' and contains(@style,'text') and not(img)]",
       "//td[a[@name='mediazonedescription']]//tr[td[img[contains(@src,'/au')]]]//td[@class='cssadmintabletdwhite' and contains(@style,'text') and not(img)]",
       "//td[a[@name='mediazonedescription']]//tr[td[img[contains(@src,'/fr')]]]//td[@class='cssadmintabletdwhite' and contains(@style,'text') and not(img)]",
