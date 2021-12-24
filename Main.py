@@ -91,11 +91,21 @@ def main(driver,ACTIONS_LIST):
     platform_name_main = None
     try:
         value = driver.find_element_by_xpath("//div[@class='cssnavigationdropdownmenuzone']").text
-        if value :
+        if value:
             platform_name_main = value
+        else:
+            value = driver.find_element_by_xpath(
+                "//div[div[contains(@class,'navigationdropdownmenulistesystemes')]]").text
+            if value:
+                platform_name_main = value
     except Exception as ee:
-        platform_name_main = None
-
+        try:
+            value = driver.find_element_by_xpath(
+                "//div[div[contains(@class,'navigationdropdownmenulistesystemes')]]").text
+            if value:
+                platform_name_main = value
+        except Exception as e:
+            platform_name_main = None
     wait_try =1
     game_list_downloaded = False
     while(wait_try <=3 ):
@@ -152,6 +162,7 @@ def main(driver,ACTIONS_LIST):
             platform_name = platform_name_main
         else:
             platform_name = RESULT_OBJ.get('Platform','default')
+        meta_info_platform_name = platform_name
         platform_name = '_'.join(platform_name.split())
         game_site_name = RESULT_OBJ.get('Game_Name','default_name')
         game_site_name = '_'.join(game_site_name.split())
@@ -255,7 +266,7 @@ def main(driver,ACTIONS_LIST):
                 if path.exists(file_name):
                     meta_title = 'Title: {}\nPlatform: {}\nPlayers: {}\nRelease Dates: {}\nSynopsis: {}'.format(
                         FINAL_RESULT_OBJ.get('Game_Name','Default'),
-                        FINAL_RESULT_OBJ.get('Platform', 'Default'),
+                        meta_info_platform_name,
                         FINAL_RESULT_OBJ.get('Number_Of_Players', 'Default'),
                         FINAL_RESULT_OBJ.get('Release_Date', 'Default'),
                         FINAL_RESULT_OBJ.get('Synopsis', 'Default')
