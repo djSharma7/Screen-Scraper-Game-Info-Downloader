@@ -38,7 +38,7 @@ def get_mozilla_with_extension_enabled():
         logger.debug("Gecko driver loaded successfully")
     except Exception as ee:
         driver_abs_path = path.abspath(CONFIG_OBJ.get('gecko_driver_path'))
-        logger.error("Gecko driver not loaded, Trying to load from the absolute path now")
+        logger.error("Gecko driver not loaded, Trying to load from the absolute path now -",ee)
         try:
             driver = webdriver.Firefox(executable_path=driver_abs_path, options=firefox_options)
             logger.debug("Gecko driver loaded from absolute path")
@@ -142,13 +142,16 @@ def main(driver,ACTIONS_LIST):
             logger.debug('{}:- {}'.format(action_obj.get('action_name'),action_obj.get('action_text')))
             value =ae_obj.actions(action_obj)
             if action_obj.get('source') in ['Video']:
+
                 if type(value) == list:
-                    for val in value:
-                        if "video-normalized" in val:
-                            value = val
-                            break
-                if type(value) == list:
-                    value = value[0]
+                    if len(value) == 1:
+                        value = value[0]
+                    else:
+                        for val in value:
+                            if "video-normalized" not in val:
+                                value = val
+                                # print ("VIDEO URL-----",value)
+                                break
             if not value and action_obj.get('no_falsy_value',False):
                 logger.error('{}  {}, {}'.format(action_obj.get('action_name'),action_obj.get('action_text'),'VALUE REQUIRED'))
                 driver.quit()
