@@ -189,7 +189,7 @@ class ActionExecutables ():
 				self.logger.debug("{} -REQUEST TRY -{} STATUS CODE -{}".format(file_name.upper(), request_current_retry,response.status_code))
 				if (response.status_code == 200):
 					if '.mp4' in file_name:
-						print ("video")
+						
 						return self.save_video_to_local(response,file_name)
 					else:
 						return self.save_image_to_local(response.content,file_name)
@@ -225,6 +225,6 @@ class ActionExecutables ():
 						d.write(chunk)
 			return 200
 		except Exception as ee:
-			print (ee)
+			
 			self.logger.error("Error while saving video on local -{}".format(ee))
 			return -1
